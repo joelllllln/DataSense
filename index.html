@@ -140,7 +140,7 @@ input[type=range]{accent-color:var(--cobalt)}
 .eli5-note{font-size:.85rem;color:var(--ink-2)}
 /* type the term */
 .type-def{margin:14px 0;padding:14px 16px;background:var(--sheet);border-left:3px solid var(--ink);border-radius:2px}
-.type-deftext{margin:6px 0 0;line-height:1.55}
+.type-deftext{margin:6px 0 0;line-height:1.55;white-space:pre-line}
 .type-formula{font-family:var(--mono);font-size:.8rem;color:var(--ink-2);margin-top:8px}
 .type-lab{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:16px 0 6px}
 .type-form{display:flex;gap:10px;flex-wrap:wrap}
@@ -156,7 +156,7 @@ input[type=range]{accent-color:var(--cobalt)}
 .match-cols{display:grid;grid-template-columns:2fr 3fr;gap:10px;margin:14px 0 6px}
 @media(max-width:560px){.match-cols{grid-template-columns:1fr 1.4fr}}
 .match-terms,.match-defs{display:flex;flex-direction:column;gap:8px;min-width:0}
-.match-item{text-align:left;padding:10px 12px;border:1.5px solid var(--rule);border-radius:2px;background:var(--sheet);font-size:.86rem;line-height:1.4;transition:border-color .12s, opacity .12s;min-width:0;overflow-wrap:anywhere;word-break:break-word}
+.match-item{text-align:left;padding:10px 12px;border:1.5px solid var(--rule);border-radius:2px;background:var(--sheet);font-size:.86rem;line-height:1.4;transition:border-color .12s, opacity .12s;min-width:0;overflow-wrap:anywhere;word-break:break-word;white-space:pre-line}
 .mi-term{font-weight:600}
 .match-item:hover:not(:disabled){border-color:var(--ink)}
 .mi-sel{border-color:var(--cobalt);box-shadow:0 0 0 1.5px var(--cobalt)}
@@ -211,7 +211,7 @@ input[type=range]{accent-color:var(--cobalt)}
 .note-items{display:flex;flex-direction:column;gap:10px}
 .note-item{border-left:3px solid var(--rule);padding:2px 0 2px 12px}
 .ni-t{font-weight:700;font-size:.92rem;line-height:1.35}
-.ni-d{color:var(--ink-2);line-height:1.5;font-size:.9rem;margin-top:2px;overflow-wrap:anywhere}
+.ni-d{color:var(--ink-2);line-height:1.5;font-size:.9rem;margin-top:2px;overflow-wrap:anywhere;white-space:pre-line}
 .ni-f{font-family:var(--mono);font-size:.78rem;color:var(--ink);background:var(--cobalt-soft);border-radius:2px;padding:3px 8px;margin-top:5px;display:inline-block;overflow-wrap:anywhere;max-width:100%}
 @media(max-width:520px){.notes-card{padding:16px 18px}.notes-card-read .notes-h{font-size:1.4rem}}
 /* read + recall (learn) mode */
@@ -544,7 +544,7 @@ input[type=range]{accent-color:var(--cobalt)}
 .flash-term{font-family:var(--serif);font-weight:700;font-size:1.7rem;line-height:1.2;text-wrap:balance}
 .flash-hint{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
 .flash-formula{font-family:var(--mono);font-size:.9rem;background:rgba(251,251,247,.14);border-radius:3px;padding:6px 12px}
-.flash-def{font-size:1.08rem;line-height:1.5;max-width:42ch}
+.flash-def{font-size:1.08rem;line-height:1.5;max-width:42ch;white-space:pre-line}
 .flash-topictag{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-top:4px}
 .flash-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .flash-rate{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:2px}
@@ -695,7 +695,7 @@ input[type=range]{accent-color:var(--cobalt)}
 .ws-reveal{display:none;margin-top:14px;border:1.5px solid var(--cobalt);outline:1px solid var(--cobalt);outline-offset:3px;border-radius:2px;padding:16px 18px;background:var(--cobalt-soft)}
 .ws-reveal-name{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--cobalt)}
 .ws-reveal-formula{font-family:var(--mono);background:var(--sheet);border:1px solid var(--rule);border-radius:2px;padding:9px 13px;margin:10px 0;font-size:.88rem;overflow-x:auto;white-space:nowrap}
-.ws-reveal p{color:var(--ink-2);font-size:.92rem}
+.ws-reveal p{color:var(--ink-2);font-size:.92rem;white-space:pre-line}
 
 /* ---------- shared widget furniture ---------- */
 .legend{display:flex;gap:18px;justify-content:center;margin-top:10px;font-family:var(--mono);font-size:.72rem;color:var(--ink-2);flex-wrap:wrap}
@@ -1290,6 +1290,7 @@ input[type=range]{accent-color:var(--cobalt)}
 <script src="data_hard_true.js"></script>
 <script src="data_model_guide.js"></script>
 <script src="data_defs_rank.js"></script>
+<script src="data_limits.js"></script>
 <script src="data_step_01_print.js"></script>
 <script src="data_step_02_text.js"></script>
 <script src="data_step_03_choose.js"></script>

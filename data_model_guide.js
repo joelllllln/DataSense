@@ -27,7 +27,7 @@
     "KNN's fit is instant but every PREDICTION searches the training set — so it suits small data, not big; and distance concentration makes it fail in high dimensions. The boundary it produces is as wiggly as the data demands, which parametric models can't always match. It explains locally ('these 5 neighbours'), not globally.",
     "A great first weapon on small, clean, low-dimensional data — and a famously bad one on big or wide data.");
 
-  g("medium",
+  g("easy",
     "What is the core limitation of KNN?",
     "Prediction cost and memory grow with the training set, and in high dimensions distances concentrate so 'nearest' stops meaning anything.",
     ["It can only draw straight-line decision boundaries, so any problem with curved class borders is fundamentally out of its reach.",
@@ -35,7 +35,7 @@
      "It only works when classes are perfectly balanced, since the majority class otherwise wins every single neighbourhood vote.",
      "It cannot output probabilities of any kind, because voting produces a class label with no notion of confidence attached to it."],
     "KNN limitations",
-    "KNN carries the whole training set to every prediction (slow, memory-hungry at scale) and leans entirely on distance being meaningful — which the curse of dimensionality quietly destroys. Irrelevant features and wrong scales poison it, and imbalanced neighbourhoods bias votes (fixable by weighting, not fatal).",
+    "• No training cost, but every prediction searches the whole training set\n• Memory-heavy — the model IS the dataset\n• Curse of dimensionality: distances concentrate, ‘nearest’ stops meaning anything\n• Must scale features — one wide-range column dominates the distance\n• Irrelevant features poison every distance\n• Imbalanced neighbourhoods skew the vote (distance-weighting helps)",
     "The two structural weaknesses: inference cost scales with data size (the opposite of most models), and high-dimensional distance concentration — everyone becomes equally far, so neighbours are meaningless. Wiggly boundaries it handles fine; probabilities come from vote fractions; imbalance hurts but distance-weighting mitigates.",
     "It never forgets — that's the problem: predictions drag the whole dataset along, and in wide data 'nearest' goes blind.");
 
@@ -85,7 +85,7 @@
      "It handles only two classes, and no principled multi-class extension exists beyond training separate models per label pair.",
      "Its coefficients are unreadable black-box quantities, which is why tree models are preferred whenever regulators demand explanations."],
     "Logistic regression limitations",
-    "One weighted sum decides everything: if the true boundary curves or depends on feature interactions, plain logistic regression underfits — you must engineer the nonlinearity yourself (or switch families). Perfect separation is its other quirk: coefficients diverge without regularisation.",
+    "• Linear decision boundary only — curvature must be hand-engineered in\n• No interactions unless you build them (x·y terms)\n• Perfect separation → coefficients blow up without regularisation\n• Multicollinearity makes coefficients unstable and unreadable\n• Outliers in the features pull the boundary\n• Needs scaling for regularisation and solver convergence",
     "The linearity is in the FEATURES YOU GIVE IT — x², x·y terms buy curvature at interpretability's cost. Probabilities are its speciality, not a gap; correlated features inflate coefficient variance but don't stop convergence; multinomial (softmax) regression is the principled multi-class form; and its coefficients are the INDUSTRY STANDARD for explainability.",
     "It draws one straight cut through feature space — powerful exactly when straight is right, and blind to every curve you didn't hand-build.");
 
@@ -135,7 +135,7 @@
      "It cannot handle more than a few dozen features, since the joint probability table it stores grows exponentially with every column added.",
      "Its decision rule ignores class priors entirely, so it systematically fails on any dataset where one class outnumbers the other."],
     "Naive Bayes limitations",
-    "Tell it 'wet pavement' and 'rain' as if independent and it counts the storm twice: stacked correlated evidence produces confidences like 0.9999 that mean nothing. Zero-frequency is the other classic trap (one unseen word vetoes a class) — solved by Laplace smoothing. The ranking often survives; the probabilities don't.",
+    "• Independence assumption is false — correlated features double-count evidence\n• Probabilities badly calibrated (0.9999 confidences); the ranking usually survives\n• Zero-frequency: one unseen value vetoes a class — fix with Laplace smoothing\n• Gaussian NB assumes each numeric feature is normal within a class\n• Cannot learn feature interactions\n• Continuous features often need binning or a distribution choice",
     "Everything else in the list is backwards: NB is the SMALL-data specialist (few parameters, closed-form counting), fits in a single pass with no gradients, scales to hundreds of thousands of features precisely because it never builds a joint table (that's the 'naive' factorisation), and the prior is the first term in its product.",
     "It counts every echoed rumour as a fresh witness — verdicts often right, certainty always inflated.");
 
@@ -185,7 +185,7 @@
      "They only accept numeric inputs, so the categorical columns of business data must be dropped before a tree can be fitted at all.",
      "Their predictions vary smoothly and continuously with each feature, making them unable to model the sharp thresholds common in rules-based domains."],
     "Decision tree limitations",
-    "The greedy top-down build is the weakness: each split is locally optimal given everything above it, so an early split that noise nudged one way commits the entire subtree. Result: high variance, easy overfitting (unpruned trees can memorise), and stepwise predictions that never extrapolate. Forests exist precisely to average this instability away.",
+    "• Overfits if max_depth / min_samples_leaf are not set — unpruned trees memorise\n• Greedy top-down splitting — locally best, never globally optimal\n• Unstable, high variance: a few changed rows rebuild the whole tree\n• Axis-aligned splits only — a diagonal boundary needs a staircase\n• Cannot extrapolate beyond the training range (piecewise-constant)\n• Impurity importances biased toward high-cardinality features\n• Imbalanced classes skew the splits",
     "Interactions are what stacked splits EXPRESS (split on A, then B within each branch — that's A×B structure); split search is polynomial and fast at practical depths; categorical handling is routine (natively or encoded); and predictions are piecewise-CONSTANT — sharp thresholds are their speciality, smoothness their failure.",
     "One nudged card near the base and the whole house rebuilds differently — that fragility is why forests were invented.");
 
@@ -235,7 +235,7 @@
      "Predictions require a full pass over the entire training set, since every training example contributes to every decision function evaluation.",
      "The optimisation is non-convex, so different random initialisations produce different support vectors and unstable decision boundaries."],
     "SVM limitations",
-    "The kernel matrix — every pair of training points — costs O(n²) memory and worse time: the scaling ceiling that removed SVMs from the big-data conversation. Add slow hyperparameter sweeps (C, gamma per fit), bolt-on probabilities, and multi-class via one-vs-rest wrappers, and the operational bill is real.",
+    "• Kernel matrix is n×n — training costs ~O(n²) memory and worse in time\n• Impractical past roughly tens of thousands of rows\n• Slow to tune: every C / gamma pair needs a full refit\n• Must scale features — the margin is a distance\n• No native probabilities — needs Platt scaling / calibration\n• Multi-class only via one-vs-rest or one-vs-one wrappers\n• Unreadable once kernelised; sensitive to heavy class overlap",
     "High dimensions are its STRENGTH (margins regularise there); kernels exist precisely to escape linearity; prediction touches only the SUPPORT vectors, not everyone (sparse solutions are the design's elegance); and the optimisation is convex — one global optimum, deterministically found. The limits are scale and ceremony, not instability.",
     "Beautiful mathematics with an n-squared price tag — the elegance stops fitting in memory around fifty thousand rows.");
 

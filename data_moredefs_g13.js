@@ -91,7 +91,7 @@
      "They only support binary classification, never regression or multiclass.",
      "Their accuracy degrades every time the random seed is changed."],
     "Forest limitations",
-    "Hundreds of deep trees cost memory and per-prediction time; the ensemble defies simple reading; and like all trees, predictions are capped at combinations of seen values — a regression forest cannot predict above its training maximum.",
+    "• Large and slow to predict — hundreds of deep trees per query\n• Memory-heavy to store and to serve under tight latency\n• Not interpretable as a whole — importances, never one readable rule\n• Cannot extrapolate beyond values seen in training\n• Impurity importances biased toward high-cardinality features\n• Correlated trees cap the variance reduction\n• Usually loses to well-tuned boosting on tabular problems",
     "Knowing the failure modes places the tool: brilliant tabular baseline, poor choice for tight latency budgets, regulated explainability, or trending targets that demand extrapolation.",
     "Heavyweight, hard to read, and it never predicts beyond what it has seen.");
 
