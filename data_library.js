@@ -244,4 +244,56 @@
   T('work', 'The day job', 'Digital assets, payments, cloud and AI — the vocabulary everyone assumes you have.', {
     ds: ['wcrypto', 'wpay', 'waws', 'wai', 'podcast']
   });
+
+  /* ---------------- Making Discord bots ---------------- */
+
+  T('bot-first', 'A bot that logs in', 'The token, the intents, and the eight lines that put a bot online.', {
+    units: ['b1', 'b2'],
+    cards: ['Discord · setup & login'],
+    tasks: ['D1 · Your first bot']
+  });
+
+  T('bot-listen', 'Hearing and answering', 'on_message, the other events, and everything you can do to a message.', {
+    units: ['b3', 'b4'],
+    cards: ['Discord · events', 'Discord · messages'],
+    quizzes: ['Discord · parsing a command'],
+    tasks: ['D2 · Listening and replying']
+  });
+
+  T('bot-commands', 'Commands and their arguments', 'Real commands instead of if-statements — and the converters that do the work.', {
+    units: ['b5', 'b6'],
+    cards: ['Discord · prefix commands', 'Discord · command arguments'],
+    quizzes: ['Discord · the logic underneath'],
+    tasks: ['D3 · Real commands']
+  });
+
+  T('bot-guards', 'Guards and errors', 'Who may run it, how often, and what the user sees when it fails.', {
+    units: ['b7', 'b8'],
+    cards: ['Discord · checks & errors'],
+    tasks: ['D4 · Arguments and errors']
+  });
+
+  T('bot-slash', 'Slash commands', 'The kind Discord draws for you — options, ephemeral replies, and the sync.', {
+    units: ['b9'],
+    cards: ['Discord · slash commands'],
+    tasks: ['D5 · Slash commands']
+  });
+
+  T('bot-look', 'Embeds, buttons and menus', 'The difference between a toy bot and one people trust.', {
+    units: ['b10', 'b11'],
+    cards: ['Discord · embeds', 'Discord · buttons & menus'],
+    tasks: ['D6 · Embeds and buttons']
+  });
+
+  T('bot-people', 'Members, roles and moderation', 'Roles, kicks, bans, timeouts, channels — and the hierarchy rule behind every failure.', {
+    units: ['b12', 'b13', 'b14'],
+    cards: ['Discord · members, roles & moderation', 'Discord · channels & servers'],
+    tasks: ['D7 · Roles and moderation']
+  });
+
+  T('bot-run', 'Cogs, jobs and keeping it running', 'Splitting the file up, work on a timer, saving data, and hosting it somewhere that stays on.', {
+    units: ['b15', 'b16', 'b17', 'b18'],
+    cards: ['Discord · background tasks & cogs', 'Discord · storage & hosting'],
+    tasks: ['D8 · Background jobs and cogs', 'D9 · A whole bot']
+  });
 })();
