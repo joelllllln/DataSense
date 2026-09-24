@@ -2054,10 +2054,8 @@
       var crp = ratePrompt('t' + t.key);
       if (crp) after.insertBefore(crp, after.querySelector('.next-row'));
     };
-    // Ctrl/Cmd + Enter checks, so you never have to reach for the mouse.
-    ta.addEventListener('keydown', function (e) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); card.querySelector('.code-check').click(); }
-    });
+    // A real code cell: Enter indents, Ctrl/Cmd/Shift+Enter checks — you never have to reach for the mouse.
+    wireEditor(ta, { onSubmit: function () { card.querySelector('.code-check').click(); } });
     app.appendChild(card);
     window.scrollTo(0, 0);
   }
@@ -2189,9 +2187,7 @@
       if (t.setup) { var su = card.querySelector('.qf-setup'); su.hidden = false; su.textContent = t.setup; }
       var ta = card.querySelector('.qf-in'), after = card.querySelector('.qf-after'), row = card.querySelector('.qf-row');
       var hintEl = card.querySelector('.qf-hint');
-      ta.onkeydown = function (e) {
-        if (e.key === 'Enter' && !e.shiftKey && t.a.indexOf('\n') < 0) { e.preventDefault(); check(); }
-      };
+      wireEditor(ta, { onSubmit: check });
       card.querySelector('.qf-check').onclick = check;
       card.querySelector('.qf-show').onclick = function () { peeked = true; reveal(false, 'Answer', 'Read it, then type it out once to make it stick.'); };
       card.querySelector('.qf-hintb').onclick = function () {
@@ -3300,13 +3296,71 @@
     var m = Math.floor(secs / 60), s = secs % 60;
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
-  // A textarea that behaves enough like a code editor: Tab indents, Enter keeps the indent,
-  // and a closing colon opens a new indented block.
-  function wireEditor(ta) {
+  // Lightweight Python token colouring for the code-cell overlay below.
+  function highlightPy(src) {
+    var re = /(#[^\n]*)|('''[\s\S]*?'''|"""[\s\S]*?"""|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*')|(\b\d+\.?\d*(?:[eE][+-]?\d+)?\b)|(\b(?:def|return|if|elif|else|for|while|in|not|and|or|is|import|from|as|class|try|except|finally|raise|with|lambda|pass|break|continue|yield|None|True|False|self|global|nonlocal|assert|del|async|await)\b)|(\b[A-Za-z_]\w*\b)(?=\s*\()|(\b[A-Za-z_]\w*\b)/g;
+    var out = '', last = 0, m;
+    while ((m = re.exec(src))) {
+      if (m.index > last) out += esc(src.slice(last, m.index));
+      if (m[1] !== undefined) out += '<span class="tok-com">' + esc(m[1]) + '</span>';
+      else if (m[2] !== undefined) out += '<span class="tok-str">' + esc(m[2]) + '</span>';
+      else if (m[3] !== undefined) out += '<span class="tok-num">' + esc(m[3]) + '</span>';
+      else if (m[4] !== undefined) out += '<span class="tok-kw">' + esc(m[4]) + '</span>';
+      else if (m[5] !== undefined) out += '<span class="tok-fn">' + esc(m[5]) + '</span>';
+      else out += '<span class="tok-var">' + esc(m[6]) + '</span>';
+      last = re.lastIndex;
+    }
+    out += esc(src.slice(last));
+    return out;
+  }
+  // Wraps a textarea with a highlighted overlay so it reads like a real Python cell,
+  // without touching how the textarea itself is typed into or read.
+  function mountHighlight(ta) {
+    if (ta.dataset.pyCell) return;
+    ta.dataset.pyCell = '1';
+    var wrap = document.createElement('div');
+    wrap.className = 'py-cell';
+    ta.parentNode.insertBefore(wrap, ta);
+    // The overlay lines up with ta's own box exactly, so move ta's outer margin onto
+    // the wrapper and flush ta to the wrap's edge instead of leaving it in both places.
+    var cs = getComputedStyle(ta);
+    wrap.style.margin = cs.marginTop + ' ' + cs.marginRight + ' ' + cs.marginBottom + ' ' + cs.marginLeft;
+    ta.style.margin = '0';
+    var pre = document.createElement('pre');
+    pre.className = ta.className + ' py-cell-hl';
+    pre.setAttribute('aria-hidden', 'true');
+    var code = document.createElement('code');
+    pre.appendChild(code);
+    wrap.appendChild(pre);
+    wrap.appendChild(ta);
+    ta.classList.add('py-cell-ta');
+    function render() { code.innerHTML = highlightPy(ta.value) + '\n'; }
+    function syncScroll() { pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft; }
+    // Setting .value in JS (Reset to starter, Show solution, etc.) doesn't fire an
+    // 'input' event, so re-render on every set too — not just on real typing.
+    var proto = Object.getPrototypeOf(ta);
+    var desc = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (desc && desc.configurable) {
+      Object.defineProperty(ta, 'value', {
+        get: function () { return desc.get.call(ta); },
+        set: function (v) { desc.set.call(ta, v); render(); },
+        configurable: true
+      });
+    }
+    ta.addEventListener('input', render);
+    ta.addEventListener('scroll', syncScroll);
+    render();
+  }
+  // A textarea that behaves enough like a real Python cell: Tab indents, Enter keeps
+  // the indent (and opens a new block after a closing colon) instead of submitting,
+  // and Ctrl/Cmd/Shift+Enter runs it — like Jupyter, not a one-line answer box.
+  function wireEditor(ta, opts) {
+    opts = opts || {};
     ta.setAttribute('spellcheck', 'false');
     ta.setAttribute('autocapitalize', 'off');
     ta.setAttribute('autocomplete', 'off');
     ta.setAttribute('autocorrect', 'off');
+    mountHighlight(ta);
     ta.onkeydown = function (e) {
       var v = ta.value, s = ta.selectionStart, en = ta.selectionEnd;
       if (e.key === 'Tab') {
@@ -3322,6 +3376,9 @@
         }
         ta.oninput && ta.oninput();
       } else if (e.key === 'Enter') {
+        if (opts.onSubmit && (e.metaKey || e.ctrlKey || e.shiftKey)) {
+          e.preventDefault(); opts.onSubmit(e); return;
+        }
         var lineStart = v.lastIndexOf('\n', s - 1) + 1;
         var line = v.slice(lineStart, s);
         var indent = (line.match(/^\s*/) || [''])[0];
@@ -3417,6 +3474,12 @@
     var afterEl = card.querySelector('.pt-after');
     var runBtn = h('<button class="btn pt-run">Run tests ▶</button>');
     actions.appendChild(runBtn);
+    // Ctrl/Cmd/Shift+Enter runs the tests, like running a real Python cell.
+    ta.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey || e.shiftKey)) {
+        e.preventDefault(); e.stopImmediatePropagation(); runBtn.click();
+      }
+    }, true);
     if (!mock) {
       var hintBtn = h('<button class="btn ghost pt-hint">Hint</button>');
       var solBtn = h('<button class="btn ghost pt-sol">Model solution</button>');
@@ -4400,12 +4463,8 @@
       el.appendChild(row);
       el.appendChild(out);
       var input = wrap.querySelector('.lb-in'), peeked = false, tries = 0;
-      wireEditor(input);
+      wireEditor(input, { onSubmit: check });
       input.focus();
-      input.onkeydown = function (e) {
-        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); check(); }
-        if (e.key === 'Enter' && it.kind !== 'quiz' && !e.shiftKey) { e.preventDefault(); check(); }
-      };
       row.querySelector('.lb-check').onclick = check;
       row.querySelector('.lb-show').onclick = function () { peeked = true; show(); };
 

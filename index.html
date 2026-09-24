@@ -23,7 +23,7 @@
   --red:#D6402B; --red-soft:#FBEFED;
   --green:#008300; --green-soft:#EDF6ED;
   --hilite:#FFF3B0;
-  --c0:#2a78d6; --c1:#eb6834; --query:#4a3aa7;
+  --c0:#2a78d6; --c1:#eb6834; --query:#4a3aa7; --py-var:#0E7C86;
   --shadow:4px 4px 0 rgba(31,41,51,.10);
   --serif:'Zilla Slab',Rockwell,'Roboto Slab',serif;
   --sans:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
@@ -37,6 +37,7 @@
   --green:#77C577; --green-soft:#1F2E1F;
   --hilite:#4A4426;
   --shadow:4px 4px 0 rgba(0,0,0,.5);
+  --py-var:#6FC7CE;
 }
 /* the lab bench stays lit: widgets draw with fixed ink-on-white colours */
 :root[data-theme=dark] .ws{--paper:#FBFBF7;--sheet:#FFFFFF;--grid:#E7EBEE;--rule:#D8DEE4;--ink:#1F2933;--ink-2:#5B6B7B;--ink-3:#8595A6;--cobalt:#2447C5;--cobalt-soft:#EBEFFC;--red:#D6402B;--red-soft:#FBEFED;--green:#008300;--green-soft:#EDF6ED;--hilite:#FFF3B0;background:#FFFFFF;color:#1F2933}
@@ -898,6 +899,20 @@ input[type=range]{accent-color:var(--cobalt)}
 .pt-reset{border:0;background:none;color:var(--ink-3);font-size:.75rem;text-decoration:underline;cursor:pointer;padding:0}
 .pt-reset:hover{color:var(--ink)}
 .pt-actions{flex-wrap:wrap;align-items:center}
+/* Python-cell look: a highlighted overlay sits behind the (invisible-text) textarea. */
+.py-cell{position:relative}
+.py-cell::after{content:'python';position:absolute;top:7px;right:11px;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);opacity:.6;pointer-events:none}
+.py-cell:focus-within{box-shadow:inset 3px 0 0 var(--cobalt)}
+.py-cell-hl{position:absolute;inset:0;margin:0;overflow:hidden;pointer-events:none;white-space:pre-wrap;word-break:break-word;background:transparent;border-color:transparent;resize:none}
+.py-cell-hl code{font:inherit;white-space:inherit;word-break:inherit;color:var(--ink)}
+.py-cell-ta{display:block;position:relative;background:transparent;color:transparent;caret-color:var(--ink)}
+.py-cell-ta::selection{background:var(--cobalt-soft)}
+.tok-kw{color:var(--cobalt);font-weight:600}
+.tok-str{color:var(--green)}
+.tok-num{color:var(--c1)}
+.tok-com{color:var(--ink-3);font-style:italic}
+.tok-fn{color:var(--query)}
+.tok-var{color:var(--py-var)}
 .pt-status{margin:10px 0;padding:9px 12px;border-radius:6px;font-size:.88rem;line-height:1.5;background:var(--grid);color:var(--ink-2)}
 .pt-status-busy{background:var(--cobalt-soft);color:var(--cobalt)}
 .pt-status-good{background:var(--green-soft);color:var(--green);font-weight:600}
