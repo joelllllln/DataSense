@@ -37,8 +37,12 @@
     'NumberOfDiscIntersections', 'Brackets', 'Nesting', 'Fish', 'StoneWall', 'CountDistinctSlices', 'AbsDistinct', 'MinAbsSumOfTwo', 'CountTriangles',
     'Dominator', 'EquiLeader', 'MaxProfit', 'MaxSliceSum', 'MaxDoubleSliceSum'];
   function isReal(l) {
-    var t = (l.title || '').replace(/\s+/g, '').toLowerCase();
-    return REAL.some(function (n) { return t.indexOf(n.toLowerCase()) >= 0; }) || (l.brief || '').indexOf('the real task') >= 0;
+    var t = l.title || '';
+    return REAL.some(function (n) {
+      if (t.indexOf(n) !== 0) return false;
+      var rest = t.slice(n.length).trim();
+      return rest === '' || rest.charAt(0) === '(' || /^(with|in one pass|by sorting)/.test(rest);
+    });
   }
   function realTasks() {
     var r = ALL.filter(isReal);
@@ -265,11 +269,11 @@
       if (after.querySelector('.walk')) return;
       after.appendChild(h('<div class="panel walk"><h2>Why it works</h2><p>' + md(l.walk) + '</p><p class="note" style="margin-top:8px">Time: ' + esc(l.complexity) + '</p></div>'));
     }
-    ed.querySelector('.hint').onclick = function () {
+    if (ed.querySelector('.hint')) ed.querySelector('.hint').onclick = function () {
       if (after.querySelector('.hintbox')) return;
       after.insertBefore(h('<div class="panel hintbox"><h2>Hint</h2><p>' + md(l.hint) + '</p></div>'), after.firstChild);
     };
-    ed.querySelector('.sol').onclick = function () {
+    if (ed.querySelector('.sol')) ed.querySelector('.sol').onclick = function () {
       if (after.querySelector('.solbox')) return;
       var b = h('<div class="panel solbox"><h2>Solution</h2><pre class="sol"><code></code></pre><div class="btns"><button class="btn sm">Put it in the editor</button></div></div>');
       b.querySelector('code').innerHTML = highlightPy(l.solution);
