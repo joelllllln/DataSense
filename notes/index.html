@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F2933" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171A" media="(prefers-color-scheme: dark)">
+<title>DS Notes — Flashcards</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="DS Notes">
+<style>
+:root{
+  --bg:#F4F4EF; --card:#FFFFFF; --rule:#DADFE5; --ink:#1F2933; --ink2:#5B6B7B; --ink3:#8A98A6;
+  --blue:#2447C5; --blue-soft:#E9EEFC; --red:#D6402B; --red-soft:#FBEFED; --green:#1C7C1C; --green-soft:#EAF5EA;
+  --amber:#B26A00; --amber-soft:#FFF4DE; --shadow:0 1px 2px rgba(31,41,51,.08),0 4px 14px rgba(31,41,51,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15171A; --card:#1E2227; --rule:#343B44; --ink:#E8E6E0; --ink2:#A9B1BB; --ink3:#7C8590;
+    --blue:#8CA2F2; --blue-soft:#232A44; --red:#F08672; --red-soft:#3A2320; --green:#77C577; --green-soft:#1F2E1F;
+    --amber:#F0B45A; --amber-soft:#3A2F1A; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.5;min-height:100vh;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overscroll-behavior-y:none;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.45;cursor:default}
+input,textarea{font:inherit;color:inherit}
+#app{max-width:560px;margin:0 auto;padding:12px 16px 40px}
+.hidden{display:none !important}
+
+/* top bar */
+.bar{display:flex;align-items:center;gap:10px;min-height:48px;margin-bottom:8px}
+.bar h1{font-size:22px;font-weight:700;flex:1;letter-spacing:-.01em}
+.bar .sub{font-size:13px;color:var(--ink2);font-weight:500}
+.bar .title{flex:1;min-width:0}
+.bar .title b{display:block;font-size:17px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;color:var(--blue);flex:none}
+.ib:active{background:var(--blue-soft)}
+.back{font-size:17px;color:var(--blue);padding:10px 6px 10px 0;font-weight:500}
+
+/* sections */
+.panel{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:14px}
+.panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600;margin-bottom:10px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+.row + .row{border-top:1px solid var(--rule)}
+.row .lab{font-size:16px;font-weight:500}
+.row .help{font-size:13px;color:var(--ink2);margin-top:1px}
+
+/* segmented control */
+.seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px}
+.seg button{white-space:nowrap;padding:7px 14px;border-radius:8px;font-size:15px;font-weight:500;color:var(--ink2);min-height:36px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:600}
+
+/* switch */
+.sw{width:51px;height:31px;border-radius:16px;background:var(--rule);position:relative;flex:none;transition:background .2s}
+.sw::after{content:'';position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25);transition:left .2s}
+.sw.on{background:#34C759}
+.sw.on::after{left:22px}
+
+/* deck list */
+.deck{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 0;min-height:56px}
+.deck + .deck{border-top:1px solid var(--rule)}
+.deck .n{flex:1;min-width:0;text-align:left}
+.deck .n b{display:block;font-size:17px;font-weight:600}
+.deck .n span{font-size:13px;color:var(--ink2)}
+.deck .pct{font-size:13px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.deck .chev{color:var(--ink3);font-size:18px}
+.deck .eye{width:40px;height:40px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:var(--blue);font-size:18px;flex:none}
+.deck .eye:active{background:var(--blue-soft)}
+.pbar{height:4px;background:var(--rule);border-radius:2px;margin-top:6px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--green);border-radius:2px}
+.all{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;background:var(--blue);color:#fff;border-radius:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.all b{display:block;font-size:17px}
+.all span{font-size:13px;opacity:.85}
+.all .chev{margin-left:auto;font-size:20px}
+
+/* study card */
+.prog{height:4px;background:var(--rule);border-radius:2px;overflow:hidden;margin:0 0 14px}
+.prog i{display:block;height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:20px 18px;min-height:220px;display:flex;flex-direction:column;gap:14px}
+.card .tag{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600}
+.card .q{font-size:22px;font-weight:650;line-height:1.3;letter-spacing:-.01em}
+.card .a{font-size:17px;line-height:1.5;white-space:pre-wrap;border-top:1px solid var(--rule);padding-top:14px}
+.card .a.ref{color:var(--ink2);font-size:16px}
+.card .a .lab{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600;margin-bottom:6px}
+.tapnote{text-align:center;color:var(--ink3);font-size:13px;margin-top:auto;padding-top:8px}
+textarea.ans{width:100%;min-height:130px;border:1.5px solid var(--rule);border-radius:12px;padding:12px;font-size:16px;line-height:1.45;background:var(--bg);resize:vertical;outline:none}
+textarea.ans:focus{border-color:var(--blue)}
+
+/* buttons */
+.btns{display:flex;gap:10px;margin-top:14px}
+.btn{flex:1;min-height:52px;border-radius:14px;font-size:17px;font-weight:600;padding:12px 14px;background:var(--card);box-shadow:var(--shadow);color:var(--ink)}
+.btn:active{transform:scale(.98)}
+.btn.p{background:var(--blue);color:#fff}
+.btn.good{background:var(--green-soft);color:var(--green)}
+.btn.bad{background:var(--red-soft);color:var(--red)}
+.btn.ghost{background:none;box-shadow:none;color:var(--blue);font-weight:500}
+.btn.sm{min-height:40px;font-size:15px;flex:none}
+
+/* marking result */
+.score{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--amber-soft)}
+.score.hi{background:var(--green-soft)}
+.score.lo{background:var(--red-soft)}
+.score b{font-size:28px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.score small{font-size:13px;color:var(--ink2);display:block}
+.score p{font-size:15px;line-height:1.4;flex:1}
+.note{font-size:14px;color:var(--ink2);line-height:1.45}
+.err{color:var(--red);font-size:14px}
+
+/* key panel */
+.keybox input{width:100%;border:1.5px solid var(--rule);border-radius:12px;padding:12px;font-size:16px;background:var(--bg);outline:none;margin:8px 0}
+.keybox input:focus{border-color:var(--blue)}
+
+/* browse */
+.bq{padding:12px 0}
+.bq + .bq{border-top:1px solid var(--rule)}
+.bq b{display:block;font-size:16px;font-weight:600;margin-bottom:4px}
+.bq p{font-size:15px;color:var(--ink2);white-space:pre-wrap;line-height:1.45}
+
+/* done */
+.done{text-align:center;padding:30px 10px}
+.done .big{font-size:48px;line-height:1}
+.done h2{font-size:22px;margin:10px 0 4px}
+.done p{color:var(--ink2);font-size:15px}
+.stats{display:flex;gap:10px;justify-content:center;margin:18px 0}
+.stat{background:var(--card);border-radius:12px;padding:10px 16px;box-shadow:var(--shadow);min-width:90px}
+.stat b{display:block;font-size:24px}
+.stat span{font-size:12px;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em}
+.foot{color:var(--ink3);font-size:12px;text-align:center;margin-top:18px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="cards.js"></script>
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>
