@@ -14,7 +14,7 @@ let problems = 0;
 function bad(id, msg) { problems++; console.log('  ✗ ' + id + ': ' + msg); }
 function warn(id, msg) { console.log('  ! ' + id + ': ' + msg); }
 const REQ = ['topic', 'id', 'title', 'idea', 'brief', 'fn', 'sig', 'starter', 'examples', 'tests', 'hint', 'solution', 'walk', 'complexity'];
-const TOPICS = ['iter', 'arr', 'count', 'prefix', 'sort', 'stack', 'window', 'lead'];
+const TOPICS = ['basics', 'iter', 'arr', 'count', 'prefix', 'sort', 'stack', 'window', 'lead', 'bsearch', 'numbers'];
 
 function runPy(code, cases, opts) {
   const py = HARNESS + '\nimport sys, json\n_d = json.load(open(sys.argv[1]))\nprint(_ds_run(_d["code"], json.dumps(_d["cases"]), json.dumps(_d["opts"])))\n';
@@ -32,7 +32,7 @@ for (const f of files) {
   try { vm.runInNewContext(fs.readFileSync(f, 'utf8'), { window: win }); }
   catch (e) { bad(f, 'does not load: ' + e.message); continue; }
   const L = win.CODILITY;
-  if (L.length < 18 || L.length > 22) warn(f, L.length + ' lessons (want 18–22)');
+  if (L.length < 18 || L.length > 26) warn(f, L.length + ' lessons (want 18–22)');
   const ids = new Set();
   L.forEach((t, i) => {
     const id = t.id || ('#' + i);

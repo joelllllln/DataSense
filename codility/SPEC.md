@@ -54,6 +54,7 @@ Fields: all of the above are required except `hidden`/`name` on a test. Optional
 
 | id | name | the ladder must end at these Codility tasks |
 |---|---|---|
+| basics | Python from the ground | plain-Python building blocks for someone who mostly knows pandas (24–26 lessons allowed) |
 | iter | Loops & binary | BinaryGap (and variants: longest run of 1s, count set bits) |
 | arr | Arrays & time complexity | CyclicRotation, OddOccurrencesInArray, FrogJmp, PermMissingElem, TapeEquilibrium |
 | count | Counting elements | FrogRiverOne, PermCheck, MissingInteger, MaxCounters |
@@ -62,3 +63,5 @@ Fields: all of the above are required except `hidden`/`name` on a test. Optional
 | stack | Stacks & queues | Brackets, Nesting, Fish, StoneWall |
 | window | Sliding window (caterpillar) | fixed window max/sum, longest window with sum ≤ S, longest substring without repeats, AbsDistinct, CountDistinctSlices, MinAbsSumOfTwo, CountTriangles |
 | lead | Leader & max slice | Dominator, EquiLeader, MaxProfit, MaxSliceSum, MaxDoubleSliceSum |
+| bsearch | Binary search & greedy | binary search by hand, bisect, binary search on the answer (MinMaxDivision), TieRopes, MaxNonoverlappingSegments |
+| numbers | Primes, gcd & Fibonacci | CountFactors, MinPerimeterRectangle, sieve, CountSemiprimes, ChocolatesByNumbers, CommonPrimeDivisors, Ladder, FibFrog |

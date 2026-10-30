@@ -4,6 +4,7 @@
   var app = document.getElementById('app');
 
   var TOPICS = [
+    { id: 'basics', name: 'Python from the ground', blurb: 'For pandas people: loops, // and %, slicing, enumerate, dicts, sets, and why a double loop is slow. No pandas in Codility.' },
     { id: 'iter', name: 'Loops & binary', blurb: 'for/while loops, running max, runs of 1s and 0s. Ends at BinaryGap.' },
     { id: 'arr', name: 'Arrays & time complexity', blurb: 'Slicing, rotation, XOR, maths instead of loops. CyclicRotation, OddOccurrences, FrogJmp, PermMissingElem, TapeEquilibrium.' },
     { id: 'count', name: 'Counting elements', blurb: 'Counting lists, sets, seen-so-far. FrogRiverOne, PermCheck, MissingInteger, MaxCounters.' },
@@ -11,7 +12,9 @@
     { id: 'sort', name: 'Sorting & sets', blurb: 'sorted(), keys, neighbours after sorting. Distinct, MaxProductOfThree, Triangle, NumberOfDiscIntersections.' },
     { id: 'stack', name: 'Stacks & queues', blurb: 'append/pop, matching brackets, simulations. Brackets, Nesting, Fish, StoneWall.' },
     { id: 'window', name: 'Sliding window', blurb: 'Fixed windows, then the caterpillar (two pointers). Distinct slices, AbsDistinct, MinAbsSumOfTwo, CountTriangles.' },
-    { id: 'lead', name: 'Leader & max slice', blurb: 'Dominator, EquiLeader, then Kadane. MaxProfit, MaxSliceSum, MaxDoubleSliceSum.' }
+    { id: 'lead', name: 'Leader & max slice', blurb: 'Dominator, EquiLeader, then Kadane. MaxProfit, MaxSliceSum, MaxDoubleSliceSum.' },
+    { id: 'bsearch', name: 'Binary search & greedy', blurb: 'lo/hi/mid by hand, bisect, binary search on the answer. MinMaxDivision, TieRopes, MaxNonoverlappingSegments.' },
+    { id: 'numbers', name: 'Primes, gcd & Fibonacci', blurb: 'Divisors in pairs, the sieve, Euclid. CountFactors, MinPerimeterRectangle, CountSemiprimes, ChocolatesByNumbers, Ladder, FibFrog.' }
   ];
   var ALL = (window.CODILITY || []).slice();
   function lessonsOf(tid) { return ALL.filter(function (l) { return l.topic === tid; }); }
@@ -35,7 +38,8 @@
   var REAL = ['BinaryGap', 'CyclicRotation', 'OddOccurrencesInArray', 'FrogJmp', 'PermMissingElem', 'TapeEquilibrium', 'FrogRiverOne', 'PermCheck',
     'MissingInteger', 'MaxCounters', 'PassingCars', 'CountDiv', 'GenomicRangeQuery', 'MinAvgTwoSlice', 'Distinct', 'MaxProductOfThree', 'Triangle',
     'NumberOfDiscIntersections', 'Brackets', 'Nesting', 'Fish', 'StoneWall', 'CountDistinctSlices', 'AbsDistinct', 'MinAbsSumOfTwo', 'CountTriangles',
-    'Dominator', 'EquiLeader', 'MaxProfit', 'MaxSliceSum', 'MaxDoubleSliceSum'];
+    'Dominator', 'EquiLeader', 'MaxProfit', 'MaxSliceSum', 'MaxDoubleSliceSum', 'MinMaxDivision', 'TieRopes', 'MaxNonoverlappingSegments',
+    'CountFactors', 'MinPerimeterRectangle', 'CountSemiprimes', 'ChocolatesByNumbers', 'CommonPrimeDivisors', 'Ladder', 'FibFrog'];
   function isReal(l) {
     var t = l.title || '';
     return REAL.some(function (n) {
@@ -45,7 +49,7 @@
     });
   }
   function realTasks() {
-    var r = ALL.filter(isReal);
+    var r = ALL.filter(function (l) { return l.topic !== 'basics' && isReal(l); });
     if (r.length >= 8) return r;
     var out = []; TOPICS.forEach(function (t) { out = out.concat(lessonsOf(t.id).slice(-3)); }); return out;
   }
