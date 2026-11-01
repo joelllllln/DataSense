@@ -202,7 +202,7 @@
       list.appendChild(row);
     });
     app.appendChild(list);
-    var r = h('<div class="foot"><button class="btn ghost sm">Reset all progress</button></div>');
+    var r = h('<div class="foot"><a href="study/" style="color:var(--blue)">Study the ideas first (bite-sized cards) ›</a><br><button class="btn ghost sm">Reset all progress</button></div>');
     r.querySelector('button').onclick = function () { if (confirm('Reset progress on every lesson?')) { P = {}; saveP(); home(); } };
     app.appendChild(r);
   }
