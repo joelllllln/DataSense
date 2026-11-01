@@ -85,7 +85,7 @@
 
       { type: 'info', title: 'MinMaxDivision: the code',
         body: 'About 20 to 30 tries, each one greedy pass over A: O(N log(sum(A))).\nBecause `lo` starts at `max(A)`, every item fits in some block, so the check needs no `a > cap` test.\nK = 1 gives `sum(A)`; K >= N gives `max(A)`. Both fall out of the loop by themselves.',
-        code: 'def solution(K, M, A):\n    lo, hi = max(A), sum(A)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can_split(A, K, mid):\n            hi = mid\n        else:\n            lo = mid + 1\n    return lo' },
+        code: 'def solution(K, M, A):\n    lo, hi = max(A), sum(A)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can_split(A, K, mid): hi = mid\n        else: lo = mid + 1\n    return lo' },
 
       { type: 'info', title: 'Greedy: best choice now, never look back',
         body: 'A greedy algorithm picks the choice that looks best right now and never undoes it.\nChange with coins 50, 20, 10, 5, 2, 1: always take the biggest coin that fits. Six steps, whatever N is.\nGreedy is not always right. Coins 1, 3, 4, amount 6: greedy takes 4 + 1 + 1, but 3 + 3 is better.',
@@ -96,7 +96,7 @@
         why: 'Greedy needs the local choice to cost nothing later; the coin set 1, 3, 4 shows what happens when it does.' },
 
       { type: 'info', title: 'TieRopes',
-        body: 'Task: ropes in a line, lengths in A. You may tie neighbours together. Return the most ropes of length at least K you can end with. N up to 100,000.\nKey insight: scan left to right, adding to a running length. The moment it reaches K, count it and start fresh. A rope that is long enough gains nothing from more ties.',
+        body: 'Task: ropes in a line, lengths in A. You may tie neighbours together. Return the most ropes of length at least K you can end with.\nKey insight: scan left to right with a running length. The moment it reaches K, count it and start fresh. A rope that is long enough gains nothing from more ties.',
         code: 'def solution(K, A):\n    count, length = 0, 0\n    for a in A:\n        length += a\n        if length >= K:\n            count += 1\n            length = 0\n    return count' },
 
       { type: 'predict', code: 'K, A = 4, [1, 2, 3, 4, 1, 1, 3]\ncount, length = 0, 0\nfor a in A:\n    length += a\n    if length >= K:\n        count += 1\n        length = 0\nprint(count)',
@@ -116,7 +116,7 @@
         body: 'Minimum speed to finish in time: search the speed; the check sums ceilings `(a + v - 1) // v`, no floats.\nPeak in an unsorted list: `A[mid] < A[mid + 1]` means go right, else keep `mid`.\nRotated sorted list: one half is always sorted, range-test it.\nThe real need: a yes/no question that splits the range.' },
 
       { type: 'info', title: 'Cheat sheet',
-        body: 'Find X: `lo <= hi`, `hi = mid - 1`, `lo = mid + 1`, else -1.\nLower bound: `lo < hi`, `hi = mid`, start `hi = len(A)`.\nCount copies: `bisect_right - bisect_left`.\nSmallest value that works: range + `feasible(mid)` + lower bound loop.\nMinMaxDivision: cap in max(A)..sum(A), greedy block count.\nTieRopes: cut when length >= K.\nMaxNonoverlappingSegments: take when start > last_end.' },
+        body: 'Find X: `lo <= hi`, `hi = mid - 1`, `lo = mid + 1`, else -1.\nLower bound: `lo < hi`, `hi = mid`, start `hi = len(A)`.\nCount copies: `bisect_right - bisect_left`.\nSmallest value that works: `feasible(mid)` + lower bound loop.\nMinMaxDivision: cap in max(A)..sum(A), greedy blocks.\nTieRopes: cut when length >= K.\nMaxNonoverlappingSegments: take when start > last_end.' },
 
       { type: 'quiz', q: 'Find the smallest crane capacity so that N boxes, kept in order, fit onto K barges. Which pattern?',
         choices: ['Binary search on the answer with a greedy feasible() check', 'Lower bound with bisect on the box weights', 'Greedy: take the earliest-ending segment', 'Linear search over the boxes'],
