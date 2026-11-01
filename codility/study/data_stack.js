@@ -120,7 +120,7 @@
         code: 'b = stack.pop()\na = stack.pop()\nif tok == "+": stack.append(a + b)\nelif tok == "-": stack.append(a - b)\nelif tok == "*": stack.append(a * b)\nelse:   # "/" truncates towards zero\n    q = abs(a) // abs(b)\n    stack.append(-q if (a < 0) != (b < 0) else q)' },
 
       { type: 'info', title: 'Cheat sheet',
-        body: 'Push `append`, pop `pop()`, peek `stack[-1]`, guard `if stack:`\nNesting: balance counter, never below 0, ends at 0\nBrackets: dict closer to opener, push openers, pop on closers, end empty\nFish: stack of downstream sizes, upstream pops while bigger\nStoneWall: stack of open heights, pop taller, count new tops\nQueue: `deque` with `popleft`\nNext greater: waiting stack of indexes\nDuplicates: pop if equal, else push' },
+        body: 'Stack: `append`, `pop()`, `stack[-1]`, guard `if stack:`\nNesting: balance never below 0, ends at 0\nBrackets: dict closer to opener; push openers, pop on closers, end empty\nFish: stack of downstream sizes; upstream pops while bigger\nStoneWall: stack of open heights; pop taller, count new tops\nQueue: `deque.popleft()`\nNext greater: waiting stack of indexes\nDuplicates: pop if equal else push' },
 
       { type: 'quiz', q: 'Which pattern: "for each day, how many days until a strictly higher price"?',
         choices: ['Waiting stack of indexes; pop when a bigger value arrives', 'Balance counter, never below zero', 'deque with popleft', 'Push every value, pop once'],
