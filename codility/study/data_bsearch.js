@@ -116,7 +116,7 @@
         body: 'Minimum speed to finish in time: search the speed; the check sums ceilings `(a + v - 1) // v`, no floats.\nPeak in an unsorted list: `A[mid] < A[mid + 1]` means go right, else keep `mid`.\nRotated sorted list: one half is always sorted, range-test it.\nThe real need: a yes/no question that splits the range.' },
 
       { type: 'info', title: 'Cheat sheet',
-        body: 'Find X: `lo <= hi`, `hi = mid - 1`, `lo = mid + 1`, else -1.\nLower bound: `lo < hi`, `hi = mid`, start `hi = len(A)`.\nCount copies: `bisect_right - bisect_left`.\nSmallest value that works: `feasible(mid)` + lower bound loop.\nMinMaxDivision: cap in max(A)..sum(A), greedy blocks.\nTieRopes: cut when length >= K.\nMaxNonoverlappingSegments: take when start > last_end.' },
+        body: 'Find X: `lo <= hi`, `hi = mid - 1`, `lo = mid + 1`.\nLower bound: `lo < hi`, `hi = mid`, start `hi = len(A)`.\nCount copies: `bisect_right - bisect_left`.\nSmallest value that works: `feasible(mid)` + lower bound loop.\nMinMaxDivision: cap in max(A)..sum(A), greedy blocks.\nTieRopes: cut when length >= K.\nMaxNonoverlappingSegments: take when start > last_end.' },
 
       { type: 'quiz', q: 'Find the smallest crane capacity so that N boxes, kept in order, fit onto K barges. Which pattern?',
         choices: ['Binary search on the answer with a greedy feasible() check', 'Lower bound with bisect on the box weights', 'Greedy: take the earliest-ending segment', 'Linear search over the boxes'],
